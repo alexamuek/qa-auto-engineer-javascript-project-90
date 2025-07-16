@@ -1,0 +1,8 @@
+export const username = 'Alex'
+export const password = 'qwe123asd'
+export const usernameLabel = 'username'
+export const passwordLabel = 'password'
+export const loginButtonLabel = 'sign in'
+export const themeButtonLabel = 'Toggle light/dark mode'
+export const profileButtonLabel = 'Profile'
+export const logoutButtonLabel = 'Logout'
