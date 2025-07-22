@@ -38,17 +38,24 @@ test.describe('Positive Tests', () => {
     await usersPage.checkEditedUserData()
   })
 
-  test('delete several users in list', async ({ page }) => {
+  test('delete user on list page', async ({ page }) => {
     const usersPage = new UsersPage(page)
     await usersPage.putOnCheckboxForUser()
-    await usersPage.deleteUserOnListPage()
+    await usersPage.deleteUser()
+    await usersPage.checkUserAfterDelete()
+  })
+
+  test('delete user on profile page', async ({ page }) => {
+    const usersPage = new UsersPage(page)
+    await usersPage.openUserProfile(constants.userToDelete)
+    await usersPage.deleteUser()
     await usersPage.checkUserAfterDelete()
   })
 
   test('delete ALL users in list', async ({ page }) => {
     const usersPage = new UsersPage(page)
     await usersPage.putOnCheckboxForAllUser()
-    await usersPage.deleteUserOnListPage()
+    await usersPage.deleteUser()
     await usersPage.checkUsersAfterDelete()
   })
 })

@@ -19,8 +19,8 @@ export default class UsersPage {
     await this.createUserLink.click()
   }
 
-  async openUserProfile() {
-    const row = await this.page.getByRole('row').filter({ has: this.page.getByText(constants.userToEdit) })
+  async openUserProfile(email) {
+    const row = await this.page.getByRole('row').filter({ has: this.page.getByText(email) })
     await expect(row).toBeVisible()
     await row.click()
     await expect(this.page.getByText(`User ${constants.userToEdit}`)).toBeVisible()
@@ -53,7 +53,7 @@ export default class UsersPage {
   }
 
   async editUserProfile() {
-    await this.openUserProfile()
+    await this.openUserProfile(constants.userToEdit)
     await this.fillOutUserFields(
       constants.newDataForEdit.email,
       constants.newDataForEdit.firstName,
@@ -116,7 +116,7 @@ export default class UsersPage {
     await checkbox.click()
   }
 
-  async deleteUserOnListPage() {
+  async deleteUser() {
     await this.deleteUserButton.click()
   }
 
