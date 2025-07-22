@@ -32,9 +32,61 @@ test.describe('Positive Tests', () => {
     await usersPage.checkUsersList()
   })
 
-  test('edit user', async ({ page }) => {
+  test('edit user - positive case', async ({ page }) => {
     const usersPage = new UsersPage(page)
     await usersPage.editUserProfile()
     await usersPage.checkEditedUserData()
+  })
+
+  test('delete several users in list', async ({ page }) => {
+    const usersPage = new UsersPage(page)
+    await usersPage.putOnCheckboxForUser()
+    await usersPage.deleteUserOnListPage()
+    await usersPage.checkUserAfterDelete()
+  })
+
+  test('delete ALL users in list', async ({ page }) => {
+    const usersPage = new UsersPage(page)
+    await usersPage.putOnCheckboxForAllUser()
+    await usersPage.deleteUserOnListPage()
+    await usersPage.checkUsersAfterDelete()
+  })
+})
+
+test.describe('Negative Tests', () => {
+  test('edit user - negative case - put the emptiness', async ({ page }) => {
+    const usersPage = new UsersPage(page)
+    await usersPage.openUserProfile()
+    await usersPage.fillOutUserFields('','','')
+    await usersPage.saveUserProfile()
+    await usersPage.expectErrorMessage()
+    await usersPage.expectRequiredMessage()
+  })
+
+  test('edit user - negative case - put wrong email - without @ ', async ({ page }) => {
+    const usersPage = new UsersPage(page)
+    await usersPage.openUserProfile()
+    await usersPage.fillOutUserFields(constants.wrongEmailToPut1,'','')
+    await usersPage.saveUserProfile()
+    await usersPage.expectErrorMessage()
+    await usersPage.expectEmailFormatMessage()
+  })
+
+  test('edit user - negative case - put wrong email - without first part ', async ({ page }) => {
+    const usersPage = new UsersPage(page)
+    await usersPage.openUserProfile()
+    await usersPage.fillOutUserFields(constants.wrongEmailToPut2,'','')
+    await usersPage.saveUserProfile()
+    await usersPage.expectErrorMessage()
+    await usersPage.expectEmailFormatMessage()
+  })
+
+  test('edit user - negative case - put wrong email - without domain ', async ({ page }) => {
+    const usersPage = new UsersPage(page)
+    await usersPage.openUserProfile()
+    await usersPage.fillOutUserFields(constants.wrongEmailToPut3,'','')
+    await usersPage.saveUserProfile()
+    await usersPage.expectErrorMessage()
+    await usersPage.expectEmailFormatMessage()
   })
 })

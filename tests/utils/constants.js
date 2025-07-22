@@ -13,6 +13,13 @@ export const userSaveButtonLabel = 'Save'
 export const emailInputLabel = 'email'
 export const firstNameInputLabel = 'First name'
 export const lastNameInputLabel = 'Last name'
+export const wrongEmailToPut1 = 'google.com'
+export const wrongEmailToPut2 = '@google.com'
+export const wrongEmailToPut3 = 'google@google'
+export const errorMessageForProfileSave = 'The form is not valid. Please check for errors'
+export const incorrectEmailMessage = 'Incorrect email format'
+export const emptyUserListMessage = 'No Users yet.'
+export const requiredMessageForProfileSave = 'Required'
 export const dataForCreate = {
   email: 'alex@gmail.com',
   firstName: 'Alex1',
@@ -20,7 +27,9 @@ export const dataForCreate = {
 }
 export const createUserResultMessage = 'Element created'
 export const deleteUserButtonLabel = 'Delete'
+export const deleteAllCheckboxLabel = 'Select all'
 export const userToEdit = 'john@google.com'
+export const userToDelete = 'john@google.com'
 export const newDataForEdit = {
   email: 'google@google.com',
   firstName: 'Mike',
