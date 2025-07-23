@@ -27,7 +27,7 @@ test.describe('Positive Tests', () => {
   test('logout', async ({ page }) => {
     await startPage.login()
     const mainPage = new MainPage(page)
-    await mainPage.openProfile()
+    await mainPage.openCurrentUserProfile()
     await mainPage.logout()
     await mainPage.checkLogoutControl()
     await startPage.waitForStartForm()

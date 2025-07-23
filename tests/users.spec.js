@@ -63,7 +63,7 @@ test.describe('Positive Tests', () => {
 test.describe('Negative Tests', () => {
   test('edit user - negative case - put the emptiness', async ({ page }) => {
     const usersPage = new UsersPage(page)
-    await usersPage.openUserProfile()
+    await usersPage.openUserProfile(constants.userToEdit)
     await usersPage.fillOutUserFields('','','')
     await usersPage.saveUserProfile()
     await usersPage.expectErrorMessage()
@@ -72,7 +72,7 @@ test.describe('Negative Tests', () => {
 
   test('edit user - negative case - put wrong email - without @ ', async ({ page }) => {
     const usersPage = new UsersPage(page)
-    await usersPage.openUserProfile()
+    await usersPage.openUserProfile(constants.userToEdit)
     await usersPage.fillOutUserFields(constants.wrongEmailToPut1,'','')
     await usersPage.saveUserProfile()
     await usersPage.expectErrorMessage()
@@ -81,7 +81,7 @@ test.describe('Negative Tests', () => {
 
   test('edit user - negative case - put wrong email - without first part ', async ({ page }) => {
     const usersPage = new UsersPage(page)
-    await usersPage.openUserProfile()
+    await usersPage.openUserProfile(constants.userToEdit)
     await usersPage.fillOutUserFields(constants.wrongEmailToPut2,'','')
     await usersPage.saveUserProfile()
     await usersPage.expectErrorMessage()
@@ -90,7 +90,7 @@ test.describe('Negative Tests', () => {
 
   test('edit user - negative case - put wrong email - without domain ', async ({ page }) => {
     const usersPage = new UsersPage(page)
-    await usersPage.openUserProfile()
+    await usersPage.openUserProfile(constants.userToEdit)
     await usersPage.fillOutUserFields(constants.wrongEmailToPut3,'','')
     await usersPage.saveUserProfile()
     await usersPage.expectErrorMessage()

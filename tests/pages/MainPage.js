@@ -20,7 +20,7 @@ export default class MainPage {
     await expect(this.welcomeText).toBeVisible()
   }
 
-  async openProfile() {
+  async openCurrentUserProfile() {
     await this.profileButton.click()
   }
 
