@@ -1,18 +1,21 @@
 import { expect } from '@playwright/test'
 import * as constants from '../utils/constants.js'
 
+const pageEl = constants.pagesEl.usersPage
+
 export default class UsersPage {
   /**
    * @param {Page} page
    */
   constructor(page) {
     this.page = page
-    this.createUserLink = page.getByRole('link', { name: constants.createUserLabel, exact: true })
-    this.saveUserButton = page.getByRole('button', { name: constants.userSaveButtonLabel })
-    this.emailInput = page.getByLabel(constants.emailInputLabel)
-    this.firstNameInput = page.getByLabel(constants.firstNameInputLabel)
-    this.lastNameInput = page.getByLabel(constants.lastNameInputLabel)
-    this.deleteUserButton = page.getByRole('button', { name: constants.deleteUserButtonLabel })
+    this.createUserLink = page.getByRole('link', { name: pageEl.createUserLabel, exact: true })
+    this.saveUserButton = page.getByRole('button', { name: pageEl.userSaveButtonLabel })
+    this.emailInput = page.getByLabel(pageEl.emailInputLabel)
+    this.firstNameInput = page.getByLabel(pageEl.firstNameInputLabel)
+    this.lastNameInput = page.getByLabel(pageEl.lastNameInputLabel)
+    this.deleteUserButton = page.getByRole('button', { name: pageEl.deleteUserButtonLabel })
+    this.deleteAllCheckbox = page.getByRole('checkbox', { name: pageEl.deleteAllCheckboxLabel })
   }
 
   async openNewUserForm() {
@@ -26,7 +29,7 @@ export default class UsersPage {
     await expect(this.page.getByText(`User ${constants.userToEdit}`)).toBeVisible()
   }
 
-  async waitForNewUserForm() {
+  async waitForUserForm() {
     await expect(this.saveUserButton).toBeVisible()
     await expect(this.emailInput).toBeVisible()
     await expect(this.firstNameInput).toBeVisible()
@@ -35,7 +38,7 @@ export default class UsersPage {
 
   async createUser() {
     await this.openNewUserForm()
-    await this.waitForNewUserForm()
+    await this.waitForUserForm()
     await this.emailInput.fill(constants.dataForCreate.email)
     await this.firstNameInput.fill(constants.dataForCreate.firstName)
     await this.lastNameInput.fill(constants.dataForCreate.lastName)
@@ -54,6 +57,7 @@ export default class UsersPage {
 
   async editUserProfile() {
     await this.openUserProfile(constants.userToEdit)
+    await this.waitForUserForm()
     await this.fillOutUserFields(
       constants.newDataForEdit.email,
       constants.newDataForEdit.firstName,
@@ -63,7 +67,7 @@ export default class UsersPage {
   }
 
   async checkResultForNewUser() {
-    const resultMessage = this.page.getByText(constants.createUserResultMessage)
+    const resultMessage = this.page.getByText(pageEl.createUserResultMessage)
     await expect(resultMessage).toBeVisible()
   }
 
@@ -74,7 +78,16 @@ export default class UsersPage {
     await expect(this.page.getByText(`User ${constants.dataForCreate.email}`)).toBeVisible()
   }
 
-  async checkUsersList() {
+  async checkUsersRows() {
+    const rows = await this.page.getByRole('row')
+    const rowsArray = Array.from(rows)
+    rowsArray.forEach(async (row) => {
+      await expect(row.locator('td')).toHaveCount(6);
+      }
+    )
+  }
+
+  async checkUserCells() {
     const cells = await this.page.getByRole('cell')
     await expect(await cells.count()).toBeGreaterThan(0)
     const cellArray = Array.from(cells)
@@ -85,6 +98,14 @@ export default class UsersPage {
     })
   }
 
+  async checkUsersList() {
+    await this.checkUsersRows()
+    await this.checkUserCells()
+    await expect(this.page.getByText(constants.dataForView.email, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(constants.dataForView.firstName, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(constants.dataForView.lastName, { exact: true })).toBeVisible()
+  }
+
   async checkEditedUserData() {
     await expect(this.page.getByText(constants.newDataForEdit.email)).toBeVisible()
     await expect(this.page.getByText(constants.newDataForEdit.firstName)).toBeVisible()
@@ -92,16 +113,16 @@ export default class UsersPage {
   }
 
   async expectErrorMessage() {
-    await expect(this.page.getByText(constants.errorMessageForProfileSave)).toBeVisible()
+    await expect(this.page.getByText(pageEl.errorMessageForProfileSave)).toBeVisible()
   }
 
   async expectRequiredMessage() {
-    const requiredMessages = await this.page.$$('p:text("Required")')
+    const requiredMessages = await this.page.$$(`p:text("${pageEl.requiredMessageForProfileSave}")`)
     expect(requiredMessages).toHaveLength(3)
   }
 
   async expectEmailFormatMessage() {
-    await expect(this.page.getByText(constants.incorrectEmailMessage)).toBeVisible()
+    await expect(this.page.getByText(pageEl.incorrectEmailMessage)).toBeVisible()
   }
 
   async putOnCheckboxForUser() {
@@ -110,10 +131,16 @@ export default class UsersPage {
     await checkbox.click()
   }
 
-  async putOnCheckboxForAllUser() {
-    // const row = await this.page.getByRole('row').filter({ has: this.page.getByText(constants.userToDelete) })
-    const checkbox = this.page.getByRole('checkbox', { name: constants.deleteAllCheckboxLabel })
-    await checkbox.click()
+  async putOnCheckboxForAllUsers() {
+    await this.deleteAllCheckbox.click()
+  }
+
+  async checkAllCheckboxesAfterPut() {
+    const checkboxes = await this.page.getByRole('checkbox')
+    const checkboxArray = Array.from(checkboxes)
+    checkboxArray.forEach(async (checkbox) => {
+      await expect(checkbox).toBeChecked()
+    })
   }
 
   async deleteUser() {
@@ -126,7 +153,7 @@ export default class UsersPage {
   }
 
   async checkUsersAfterDelete() {
-    const el = this.page.getByText(constants.emptyUserListMessage)
+    const el = this.page.getByText(pageEl.emptyUserListMessage)
     await expect(el).toBeVisible()
   }
 }

@@ -1,17 +1,20 @@
 import { expect } from '@playwright/test'
 import * as constants from '../utils/constants.js'
 
+const pageEl = constants.pagesEl.mainPage
+
 export default class MainPage {
   /**
    * @param {Page} page
    */
   constructor(page) {
     this.page = page
-    this.themeButton = page.getByRole('button', { name: constants.themeButtonLabel })
-    this.profileButton = page.getByRole('button', { name: constants.profileButtonLabel })
-    this.logoutButton = page.getByRole('menuitem', { name: constants.logoutButtonLabel })
-    this.welcomeText = page.getByText(constants.welcomeText)
-    this.usersMenuItem = page.getByRole('menuitem', { name: constants.usersMenuItemLabel })
+    this.themeButton = page.getByRole('button', { name: pageEl.themeButtonLabel })
+    this.profileButton = page.getByRole('button', { name: pageEl.profileButtonLabel })
+    this.logoutButton = page.getByRole('menuitem', { name: pageEl.logoutButtonLabel })
+    this.welcomeText = page.getByText(pageEl.welcomeText)
+    this.usersMenuItem = page.getByRole('menuitem', { name: pageEl.usersMenuItemLabel })
+    this.statusMenuItem = page.getByRole('menuitem', { name: pageEl.statusMenuItemLabel })
   }
 
   async waitForControls() {
@@ -34,5 +37,9 @@ export default class MainPage {
 
   async openUsersList() {
     await this.usersMenuItem.click()
+  }
+
+  async openStatusesList() {
+    await this.statusMenuItem.click()
   }
 }

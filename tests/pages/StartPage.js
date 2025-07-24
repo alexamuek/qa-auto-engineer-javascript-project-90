@@ -1,15 +1,17 @@
 import { expect } from '@playwright/test'
 import * as constants from '../utils/constants.js'
 
+const pageEl = constants.pagesEl.startPage
+
 export default class StartPage {
   /**
    * @param {Page} page
    */
   constructor(page) {
     this.page = page
-    this.inputName = page.getByLabel(constants.usernameLabel)
-    this.inputPassword = page.getByLabel(constants.passwordLabel)
-    this.signInButton = page.getByRole('button', { name: constants.loginButtonLabel })
+    this.inputName = page.getByLabel(pageEl.usernameLabel)
+    this.inputPassword = page.getByLabel(pageEl.passwordLabel)
+    this.signInButton = page.getByRole('button', { name: pageEl.loginButtonLabel })
   }
 
   async goto() {
