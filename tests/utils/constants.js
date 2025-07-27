@@ -7,26 +7,31 @@ export const dataForCreate = {
   email: 'alex@gmail.com',
   firstName: 'Alex1',
   lastName: 'Alex2',
-  name: 'Testing',
+  statusName: 'Testing',
   slug: 'to_test',
+  labelName: 'low',
 }
 export const dataForView = {
   email: 'john@google.com',
   firstName: 'John',
   lastName: 'Doe', 
-  name: 'Draft',
+  statusName: 'Draft',
   slug: 'draft',
+  labelName: 'bug',
 }
 export const userToEdit = 'john@google.com'
 export const statusToEdit = 'Draft'
+export const labelToEdit = 'bug'
 export const userToDelete = 'john@google.com'
 export const statusToDelete = 'Draft'
+export const labelToDelete = 'bug'
 export const newDataForEdit = {
   email: 'google@google.com',
   firstName: 'Mike',
   lastName: 'Jonson',
-  name: 'Draft1',
+  statusName: 'Draft1',
   slug: 'draft1',
+  labelName: 'bug1',
 }
 export const pagesEl = {
   startPage: {
@@ -41,6 +46,7 @@ export const pagesEl = {
     welcomeText: 'Welcome to the administration',
     usersMenuItemLabel: 'users',
     statusMenuItemLabel: 'task statuses',
+    labelMenuItemLabel: 'labels',
   },
   usersPage: {
     createUserLabel: 'Create',
@@ -65,5 +71,14 @@ export const pagesEl = {
     deleteStatusButtonLabel: 'Delete',
     deleteAllCheckboxLabel: 'Select all',
     emptyStatusesListMessage: 'No Task statuses yet.',
+  },
+  labelsPage: {
+    createLabel: 'Create',
+    labelSaveButtonLabel: 'Save',
+    nameInputLabel: 'name',
+    createLabelResultMessage: 'Element created',
+    deleteLabelButtonLabel: 'Delete',
+    deleteAllCheckboxLabel: 'Select all',
+    emptyLabelsListMessage: 'No Labels yet.',
   }
 }

@@ -33,14 +33,14 @@ export default class StatusesPage {
   }
 
   async checkNewStatusData() {
-    await expect(this.nameInput).toHaveValue(constants.dataForCreate.name)
+    await expect(this.nameInput).toHaveValue(constants.dataForCreate.statusName)
     await expect(this.slugInput).toHaveValue(constants.dataForCreate.slug)
   }
 
   async createStatus() {
     await this.openNewStatusForm()
     await this.waitForStatusForm()
-    await this.nameInput.fill(constants.dataForCreate.name)
+    await this.nameInput.fill(constants.dataForCreate.statusName)
     await this.slugInput.fill(constants.dataForCreate.slug)
     await this.saveStatusButton.click()
   }
@@ -92,7 +92,7 @@ export default class StatusesPage {
     await this.openStatusInfo(constants.statusToEdit)
     await this.waitForStatusForm()
     await this.fillOutStatusFields(
-      constants.newDataForEdit.name,
+      constants.newDataForEdit.statusName,
       constants.newDataForEdit.slug,
 
     )
@@ -100,7 +100,7 @@ export default class StatusesPage {
   }
 
   async checkEditedStatusData() {
-    await expect(this.page.getByText(constants.newDataForEdit.name,  { exact: true })).toBeVisible()
+    await expect(this.page.getByText(constants.newDataForEdit.statusName,  { exact: true })).toBeVisible()
     await expect(this.page.getByText(constants.newDataForEdit.slug,  { exact: true })).toBeVisible()
   }
 

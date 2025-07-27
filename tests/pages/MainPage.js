@@ -15,6 +15,7 @@ export default class MainPage {
     this.welcomeText = page.getByText(pageEl.welcomeText)
     this.usersMenuItem = page.getByRole('menuitem', { name: pageEl.usersMenuItemLabel })
     this.statusMenuItem = page.getByRole('menuitem', { name: pageEl.statusMenuItemLabel })
+    this.labelMenuItem = page.getByRole('menuitem', { name: pageEl.labelMenuItemLabel })
   }
 
   async waitForControls() {
@@ -41,5 +42,9 @@ export default class MainPage {
 
   async openStatusesList() {
     await this.statusMenuItem.click()
+  }
+
+  async openLabelsList() {
+    await this.labelMenuItem.click()
   }
 }
