@@ -18,6 +18,12 @@ export const dataForView = {
   statusName: 'Draft',
   slug: 'draft',
   labelName: 'bug',
+  assigneeUser: 'john@google.com',
+  title: 'New bug',
+  content: 'Big bug',
+  statusForTask: 'Draft',
+  labelForTask1: 'bug',
+  labelForTask2: 'feature',
 }
 export const userToEdit = 'john@google.com'
 export const statusToEdit = 'Draft'
@@ -47,6 +53,7 @@ export const pagesEl = {
     usersMenuItemLabel: 'users',
     statusMenuItemLabel: 'task statuses',
     labelMenuItemLabel: 'labels',
+    tasksMenuItemLabel: 'Tasks',
   },
   usersPage: {
     createUserLabel: 'Create',
@@ -80,5 +87,19 @@ export const pagesEl = {
     deleteLabelButtonLabel: 'Delete',
     deleteAllCheckboxLabel: 'Select all',
     emptyLabelsListMessage: 'No Labels yet.',
-  }
+  },
+  tasksPage: {
+    createTaskLabel: 'Create',
+    taskSaveButtonLabel: 'Save',
+    assigneeSelectionLabel: 'Assignee',
+    titleInputLabel: 'Title',
+    contentInputLabel: 'Content',
+    statusSelectionLabel: 'Status',
+    labelSelectionLabel: 'Label',
+    createTaskResultMessage: 'Element created',
+    deleteTaskButtonLabel: 'Delete',
+    editTaskButtonLabel: 'Edit',
+    showTaskButtonLabel: 'Show',
+
+  },
 }
