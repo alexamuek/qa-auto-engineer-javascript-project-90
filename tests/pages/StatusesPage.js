@@ -25,6 +25,7 @@ export default class StatusesPage {
     await expect(this.saveStatusButton).toBeVisible()
     await expect(this.nameInput).toBeVisible()
     await expect(this.slugInput).toBeVisible()
+    await expect(this.page.getByText(pageEl.createStatusTitle)).toBeVisible()
   }
 
   async checkResultForNewStatus() {
@@ -68,7 +69,7 @@ export default class StatusesPage {
   async checkStatusesList() {
     await this.checkStatusRows()
     await this.checkStatusCells()
-    await expect(this.page.getByText(constants.dataForView.name, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(constants.dataForView.statusName, { exact: true })).toBeVisible()
     await expect(this.page.getByText(constants.dataForView.slug, { exact: true })).toBeVisible()
   }
 

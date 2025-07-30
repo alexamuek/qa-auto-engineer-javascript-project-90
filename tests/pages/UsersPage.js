@@ -34,6 +34,7 @@ export default class UsersPage {
     await expect(this.emailInput).toBeVisible()
     await expect(this.firstNameInput).toBeVisible()
     await expect(this.lastNameInput).toBeVisible()
+    await expect(this.page.getByText(pageEl.createUserTitle)).toBeVisible()
   }
 
   async createUser() {

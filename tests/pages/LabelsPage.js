@@ -22,6 +22,7 @@ export default class LabelsPage {
 
   async waitForLabelForm() {
     await expect(this.saveLabelButton).toBeVisible()
+    await expect(this.page.getByText(pageEl.createLabelTitle)).toBeVisible()
     await expect(this.nameInput).toBeVisible()
   }
 
