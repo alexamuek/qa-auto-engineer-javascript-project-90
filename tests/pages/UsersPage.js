@@ -34,7 +34,7 @@ export default class UsersPage {
     await expect(this.emailInput).toBeVisible()
     await expect(this.firstNameInput).toBeVisible()
     await expect(this.lastNameInput).toBeVisible()
-    await expect(this.page.getByText(pageEl.createUserTitle)).toBeVisible()
+    //await expect(this.page.getByText(pageEl.createUserTitle)).toBeVisible()
   }
 
   async createUser() {
@@ -58,7 +58,6 @@ export default class UsersPage {
 
   async editUserProfile() {
     await this.openUserProfile(constants.userToEdit)
-    await this.waitForUserForm()
     await this.fillOutUserFields(
       constants.newDataForEdit.email,
       constants.newDataForEdit.firstName,

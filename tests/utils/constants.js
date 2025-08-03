@@ -110,5 +110,6 @@ export const pagesEl = {
     createTaskTitle: 'Create Task',
     createAtLabel: 'Created at',
     idLabel: 'Id',
+    tasksMenuItemLabel: 'Tasks',
   },
 }

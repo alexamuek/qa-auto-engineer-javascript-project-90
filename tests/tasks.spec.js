@@ -28,6 +28,8 @@ test.describe('Positive Tests', () => {
   })
 
   test('create task', async ({ page }) => {
+    await tasksPage.openNewTaskForm()
+    await tasksPage.waitForTaskForm()
     await tasksPage.createTask()
     await tasksPage.checkResultForNewTask()
     await tasksPage.checkNewTaskData()
@@ -43,16 +45,16 @@ test.describe('Positive Tests', () => {
     await tasksPage.checkEditedTaskData()
   })
 
-  /*test('delete status on list page', async ({ page }) => {
-    await statusesPage.putOnCheckboxForStatus()
-    await statusesPage.deleteStatus()
-    await statusesPage.checkStatusAfterDelete()
+  test('open view of task', async ({ page }) => {
+    await tasksPage.openViewOfTask()
+    await tasksPage.checkTaskInViewMode()
   })
 
-  test('delete ALL statuses in list', async ({ page }) => {
-    await statusesPage.putOnCheckboxForAllStatuses()
-    await statusesPage.checkAllCheckboxesAfterPut()
-    await statusesPage.deleteStatus()
-    await statusesPage.checkStatusesAfterDelete()
-  })*/
+  test('delete task', async ({ page }) => {
+    await tasksPage.openNewTaskForm()
+    await tasksPage.createTask()
+    const taskId = await tasksPage.getNewTaskID()
+    await tasksPage.goToTaskList()
+    await tasksPage.deleteCreatedTask(taskId)
+  })
 })

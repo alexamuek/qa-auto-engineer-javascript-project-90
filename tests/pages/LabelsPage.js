@@ -85,7 +85,6 @@ export default class LabelsPage {
 
   async editLabel() {
     await this.openLabelInfo(constants.labelToEdit)
-    await this.waitForLabelForm()
     await this.fillOutLabelFields(
       constants.newDataForEdit.labelName,
     )

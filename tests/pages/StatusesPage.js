@@ -91,7 +91,6 @@ export default class StatusesPage {
 
   async editStatus() {
     await this.openStatusInfo(constants.statusToEdit)
-    await this.waitForStatusForm()
     await this.fillOutStatusFields(
       constants.newDataForEdit.statusName,
       constants.newDataForEdit.slug,

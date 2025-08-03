@@ -19,6 +19,7 @@ export default class TasksPage {
     this.statusSelection = page.getByLabel(pageEl.statusSelectionLabel)
     this.labelSelection = page.getByLabel(pageEl.labelSelectionLabel, { exact: true })
     this.deleteTaskButton = page.getByRole('button', { name: pageEl.deleteTaskButtonLabel })
+    this.tasksMenuItem = page.getByRole('menuitem', { name: pageEl.tasksMenuItemLabel })
   }
 
   async openNewTaskForm() {
@@ -41,12 +42,21 @@ export default class TasksPage {
     await expect(this.page.getByText(pageEl.createAtLabel)).toBeVisible()
     const idEl = this.page.getByText(pageEl.idLabel)
     await expect(idEl).toBeVisible()
+    // check id value
     const parent1 = idEl.locator('..')
     const parent2 = parent1.locator('..')
     const childEl = parent2.locator('> *').nth(1)
     await expect(childEl).toBeVisible()
     expect(childEl.textContent()).toBeDefined()
     expect(childEl.textContent()).not.toBe('')
+  }
+
+  async getNewTaskID() {
+    const idEl = this.page.getByText(pageEl.idLabel)
+    const parent1 = idEl.locator('..')
+    const parent2 = parent1.locator('..')
+    const childEl = parent2.locator('> *').nth(1)
+    return await childEl.textContent()
   }
 
   async checkNewTaskData() {
@@ -71,8 +81,6 @@ export default class TasksPage {
   }
 
   async createTask() {
-    await this.openNewTaskForm()
-    await this.waitForTaskForm()
     await this.chooseItem(this.assigneeSelection, constants.dataForCreate.assigneeUser)
     await this.titleInput.fill(constants.dataForCreate.title)
     await this.contentInput.fill(constants.dataForCreate.content)
@@ -105,7 +113,7 @@ export default class TasksPage {
     const editLink = await this.editTaskButton.first()
     expect(editLink).toBeVisible()
     await editLink.click()
-    await expect(this.page.getByText('Id')).toBeVisible()
+    await expect(this.page.getByText(pageEl.idLabel)).toBeVisible()
   }
 
   async fillOutTaskFields(name) {
@@ -123,35 +131,28 @@ export default class TasksPage {
     await expect(this.page.getByText(constants.newDataForEdit.content,  { exact: true })).toBeVisible()
   }
 
-  /*async putOnCheckboxForLabel() {
-    const row = await this.page.getByRole('row').filter({ has: this.page.getByText(constants.labelToDelete, { exact: true }) })
-    const checkbox = row.getByRole('checkbox')
-    await checkbox.click()
+  async openViewOfTask() {
+    const showLink = await this.showTaskButton.first()
+    expect(showLink).toBeVisible()
+    await showLink.click()
   }
 
-  async checkAllCheckboxesAfterPut() {
-    const checkboxes = await this.page.getByRole('checkbox')
-    const checkboxArray = Array.from(checkboxes)
-    checkboxArray.forEach(async (checkbox) => {
-      await expect(checkbox).toBeChecked()
-    })
-  }
-  
-  async deleteLabel() {
-    await this.deleteLabelButton.click()
+  async checkTaskInViewMode() {
+    await expect(this.page.getByText(pageEl.idLabel)).toBeVisible()
+    await expect(this.page.getByText(pageEl.createAtLabel)).toBeVisible()
+    await expect(this.assigneeSelection).not.toBeVisible()
+    await expect(this.deleteTaskButton).toBeVisible()
   }
 
-  async checkLabelAfterDelete() {
-    const el = this.page.getByText(constants.labelToDelete, { exact: true })
-    await expect(el).not.toBeVisible()
+  async goToTaskList() {
+    await this.tasksMenuItem.click()
   }
 
-  async putOnCheckboxForAllLabels() {
-    await this.deleteAllCheckbox.click()
+  async deleteCreatedTask(taskId) {
+    const taskEditButton = this.page.locator(`[href="#/tasks/${taskId}"]`)
+    await expect(taskEditButton).toBeVisible()
+    await taskEditButton.click()
+    await this.deleteTaskButton.click()
+    await expect(this.page.locator(`[href="#/tasks/${taskId}"]`)).not.toBeVisible()
   }
-
-  async checkLabelsAfterDelete() {
-    const el = this.page.getByText(pageEl.emptyLabelsListMessage)
-    await expect(el).toBeVisible()
-  }*/
 }
