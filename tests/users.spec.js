@@ -22,9 +22,14 @@ test.afterEach(async ({ page }) => {
 })
 
 test.describe('Positive Tests', () => {
+  test('open form for new user', async ({ page }) => {
+    await usersPage.openCreateForm()
+    await usersPage.waitForUserForm()
+  })
+
   test('create user', async ({ page }) => {
     await usersPage.createUser()
-    await usersPage.checkResultForNewUser()
+    await usersPage.checkMessageForNewObj()
     await usersPage.checkNewUserData()
   })
 
@@ -33,26 +38,27 @@ test.describe('Positive Tests', () => {
   })
 
   test('edit user', async ({ page }) => {
-    await usersPage.editUserProfile()
+    await usersPage.checkUserDataBefore()
+    await usersPage.editUser()
+    await usersPage.checkMessageForUpdatedObj()
     await usersPage.checkEditedUserData()
   })
 
   test('delete user on list page', async ({ page }) => {
     await usersPage.putOnCheckboxForUser()
-    await usersPage.deleteUser()
+    await usersPage.delete()
+    await usersPage.checkMessageForDeletedObj()
     await usersPage.checkUserAfterDelete()
   })
 
   test('delete user on profile page', async ({ page }) => {
     await usersPage.openUserProfile(constants.userToDelete)
-    await usersPage.deleteUser()
+    await usersPage.delete()
     await usersPage.checkUserAfterDelete()
   })
 
   test('delete ALL users in list', async ({ page }) => {
-    await usersPage.putOnCheckboxForAllUsers()
-    await usersPage.checkAllCheckboxesAfterPut()
-    await usersPage.deleteUser()
+    await usersPage.deleteAllItems()
     await usersPage.checkUsersAfterDelete()
   })
 })
@@ -61,7 +67,7 @@ test.describe('Negative Tests', () => {
   test('edit user - put the emptiness', async ({ page }) => {
     await usersPage.openUserProfile(constants.userToEdit)
     await usersPage.fillOutUserFields('','','')
-    await usersPage.saveUserProfile()
+    await usersPage.save()
     await usersPage.expectErrorMessage()
     await usersPage.expectRequiredMessage()
   })
@@ -69,7 +75,7 @@ test.describe('Negative Tests', () => {
   test('edit user - put wrong email - without @ ', async ({ page }) => {
     await usersPage.openUserProfile(constants.userToEdit)
     await usersPage.fillOutUserFields(constants.wrongEmailToPut1,'','')
-    await usersPage.saveUserProfile()
+    await usersPage.save()
     await usersPage.expectErrorMessage()
     await usersPage.expectEmailFormatMessage()
   })
@@ -77,7 +83,7 @@ test.describe('Negative Tests', () => {
   test('edit user - put wrong email - without first part ', async ({ page }) => {
     await usersPage.openUserProfile(constants.userToEdit)
     await usersPage.fillOutUserFields(constants.wrongEmailToPut2,'','')
-    await usersPage.saveUserProfile()
+    await usersPage.save()
     await usersPage.expectErrorMessage()
     await usersPage.expectEmailFormatMessage()
   })
@@ -85,7 +91,7 @@ test.describe('Negative Tests', () => {
   test('edit user - put wrong email - without domain ', async ({ page }) => {
     await usersPage.openUserProfile(constants.userToEdit)
     await usersPage.fillOutUserFields(constants.wrongEmailToPut3,'','')
-    await usersPage.saveUserProfile()
+    await usersPage.save()
     await usersPage.expectErrorMessage()
     await usersPage.expectEmailFormatMessage()
   })

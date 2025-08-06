@@ -23,14 +23,14 @@ test.afterEach(async ({ page }) => {
 
 test.describe('Positive Tests', () => {
   test('open form for new task', async ({ page }) => {
-    await tasksPage.openNewTaskForm()
+    await tasksPage.openCreateForm()
     await tasksPage.waitForTaskForm()
   })
 
   test('create task', async ({ page }) => {
-    await tasksPage.openNewTaskForm()
-    await tasksPage.waitForTaskForm()
+    await tasksPage.openCreateForm()
     await tasksPage.createTask()
+    await tasksPage.checkMessageForNewObj()
     await tasksPage.checkResultForNewTask()
     await tasksPage.checkNewTaskData()
   })
@@ -51,10 +51,23 @@ test.describe('Positive Tests', () => {
   })
 
   test('delete task', async ({ page }) => {
-    await tasksPage.openNewTaskForm()
+    await tasksPage.openCreateForm()
     await tasksPage.createTask()
     const taskId = await tasksPage.getNewTaskID()
     await tasksPage.goToTaskList()
     await tasksPage.deleteCreatedTask(taskId)
   })
+
+  /*test('filter by assignee', async ({ page }) => {
+    await tasksPage.openNewTaskForm()
+    await tasksPage.createTask()
+    //const taskId = await tasksPage.getNewTaskID()
+    await tasksPage.goToTaskList()
+    await tasksPage.filterByAssignee()
+    // check
+    //await tasksPage.removeFilterByAssignee()
+    //await tasksPage.checkFilterResult()
+  })*/
+
+
 })

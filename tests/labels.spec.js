@@ -23,13 +23,13 @@ test.afterEach(async ({ page }) => {
 
 test.describe('Positive Tests', () => {
   test('open form for new label', async ({ page }) => {
-    await labelsPage.openNewLabelForm()
+    await labelsPage.openCreateForm()
     await labelsPage.waitForLabelForm()
   })
 
   test('create label', async ({ page }) => {
     await labelsPage.createLabel()
-    await labelsPage.checkResultForNewLabel()
+    await labelsPage.checkMessageForNewObj()
     await labelsPage.checkNewLabelData()
   })
 
@@ -40,19 +40,19 @@ test.describe('Positive Tests', () => {
   test('edit label', async ({ page }) => {
     await labelsPage.checkLabelDataBefore()
     await labelsPage.editLabel()
+    await labelsPage.checkMessageForUpdatedObj()
     await labelsPage.checkEditedLabelData()
   })
 
   test('delete label on list page', async ({ page }) => {
     await labelsPage.putOnCheckboxForLabel()
-    await labelsPage.deleteLabel()
+    await labelsPage.delete()
+    await labelsPage.checkMessageForDeletedObj()
     await labelsPage.checkLabelAfterDelete()
   })
 
   test('delete ALL labels in list', async ({ page }) => {
-    await labelsPage.putOnCheckboxForAllLabels()
-    await labelsPage.checkAllCheckboxesAfterPut()
-    await labelsPage.deleteLabel()
+    await labelsPage.deleteAllItems()
     await labelsPage.checkLabelsAfterDelete()
   })
 })

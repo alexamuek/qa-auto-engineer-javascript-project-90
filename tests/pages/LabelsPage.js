@@ -1,70 +1,45 @@
 import { expect } from '@playwright/test'
 import * as constants from '../utils/constants.js'
+import { Helpers }  from './Helpers.js'
 
 const pageEl = constants.pagesEl.labelsPage
 
-export default class LabelsPage {
+export default class LabelsPage extends Helpers {
   /**
    * @param {Page} page
    */
   constructor(page) {
+    super(page)
     this.page = page
-    this.createLabelLink = page.getByRole('link', { name: pageEl.createLabel, exact: true })
-    this.saveLabelButton = page.getByRole('button', { name: pageEl.labelSaveButtonLabel })
     this.nameInput = page.getByLabel(pageEl.nameInputLabel)
-    this.deleteLabelButton = page.getByRole('button', { name: pageEl.deleteLabelButtonLabel })
-    this.deleteAllCheckbox = page.getByRole('checkbox', { name: pageEl.deleteAllCheckboxLabel })
-  }
-
-  async openNewLabelForm() {
-    await this.createLabelLink.click()
   }
 
   async waitForLabelForm() {
-    await expect(this.saveLabelButton).toBeVisible()
+    await expect(this.saveButton).toBeVisible()
     await expect(this.page.getByText(pageEl.createLabelTitle)).toBeVisible()
     await expect(this.nameInput).toBeVisible()
-  }
-
-  async checkResultForNewLabel() {
-    const resultMessage = this.page.getByText(pageEl.createLabelResultMessage)
-    await expect(resultMessage).toBeVisible()
+    await expect(this.page.getByText(pageEl.createLabelTitle)).toBeVisible()
   }
 
   async checkNewLabelData() {
     await expect(this.nameInput).toHaveValue(constants.dataForCreate.labelName)
   }
 
+  async fillOutLabelFields(name) {
+    await this.nameInput.fill(name)
+  }
+
   async createLabel() {
-    await this.openNewLabelForm()
+    await super.openCreateForm()
     await this.waitForLabelForm()
-    await this.nameInput.fill(constants.dataForCreate.labelName)
-    await this.saveLabelButton.click()
-  }
-
-  async checkLabelRows() {
-    const rows = await this.page.getByRole('row')
-    const rowsArray = Array.from(rows)
-    rowsArray.forEach(async (row) => {
-      await expect(row.locator('td')).toHaveCount(4);
-      }
-    )
-  }
-
-  async checkLabelCells() {
-    const cells = await this.page.getByRole('cell')
-    await expect(await cells.count()).toBeGreaterThan(0)
-    const cellArray = Array.from(cells)
-    cellArray.forEach(async (cell) => {
-      await expect(cell).toBeVisible()
-      expect(cell.textContent()).toBeDefined()
-      expect(cell.textContent()?.trim()).not.toBe('')
-    })
+    await this.fillOutLabelFields(constants.dataForCreate.labelName)
+    await super.save()
   }
 
   async checkLabelsList() {
-    await this.checkLabelRows()
-    await this.checkLabelCells()
+    const expectedCount = 4
+    await super.checkRows(expectedCount)
+    await super.checkCells()
     await expect(this.page.getByText(constants.dataForView.labelName, { exact: true })).toBeVisible()
   }
 
@@ -79,16 +54,12 @@ export default class LabelsPage {
     await expect(this.page.getByText(`Label ${constants.labelToEdit}`)).toBeVisible()
   }
 
-  async fillOutLabelFields(name) {
-    await this.nameInput.fill(name)
-  }
-
   async editLabel() {
     await this.openLabelInfo(constants.labelToEdit)
     await this.fillOutLabelFields(
       constants.newDataForEdit.labelName,
     )
-    await this.saveLabelButton.click()
+    await super.save()
   }
 
   async checkEditedLabelData() {
@@ -100,30 +71,14 @@ export default class LabelsPage {
     const checkbox = row.getByRole('checkbox')
     await checkbox.click()
   }
-
-  async checkAllCheckboxesAfterPut() {
-    const checkboxes = await this.page.getByRole('checkbox')
-    const checkboxArray = Array.from(checkboxes)
-    checkboxArray.forEach(async (checkbox) => {
-      await expect(checkbox).toBeChecked()
-    })
-  }
   
-  async deleteLabel() {
-    await this.deleteLabelButton.click()
-  }
-
   async checkLabelAfterDelete() {
     const el = this.page.getByText(constants.labelToDelete, { exact: true })
     await expect(el).not.toBeVisible()
   }
 
-  async putOnCheckboxForAllLabels() {
-    await this.deleteAllCheckbox.click()
-  }
-
   async checkLabelsAfterDelete() {
-    const el = this.page.getByText(pageEl.emptyLabelsListMessage)
-    await expect(el).toBeVisible()
+    await this.checkMessageAboutEmptyList(pageEl.emptyLabelsListMessage)
+    await this.checkRowsAfterDelete()
   }
 }

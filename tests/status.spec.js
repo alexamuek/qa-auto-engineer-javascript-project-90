@@ -23,13 +23,13 @@ test.afterEach(async ({ page }) => {
 
 test.describe('Positive Tests', () => {
   test('open form for new status', async ({ page }) => {
-    await statusesPage.openNewStatusForm()
+    await statusesPage.openCreateForm()
     await statusesPage.waitForStatusForm()
   })
 
   test('create status', async ({ page }) => {
     await statusesPage.createStatus()
-    await statusesPage.checkResultForNewStatus()
+    await statusesPage.checkMessageForNewObj()
     await statusesPage.checkNewStatusData()
   })
 
@@ -40,19 +40,19 @@ test.describe('Positive Tests', () => {
   test('edit status', async ({ page }) => {
     await statusesPage.checkStatusDataBefore()
     await statusesPage.editStatus()
+    await statusesPage.checkMessageForUpdatedObj()
     await statusesPage.checkEditedStatusData()
   })
 
   test('delete status on list page', async ({ page }) => {
     await statusesPage.putOnCheckboxForStatus()
-    await statusesPage.deleteStatus()
+    await statusesPage.delete()
+    await statusesPage.checkMessageForDeletedObj()
     await statusesPage.checkStatusAfterDelete()
   })
 
   test('delete ALL statuses in list', async ({ page }) => {
-    await statusesPage.putOnCheckboxForAllStatuses()
-    await statusesPage.checkAllCheckboxesAfterPut()
-    await statusesPage.deleteStatus()
+    await statusesPage.deleteAllItems()
     await statusesPage.checkStatusesAfterDelete()
   })
 })
