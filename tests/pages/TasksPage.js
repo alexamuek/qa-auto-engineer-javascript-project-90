@@ -107,7 +107,7 @@ export default class TasksPage extends Helpers {
     await expect(this.page.getByText(pageEl.idLabel)).toBeVisible()
   }
 
-  async fillOutTaskFields(name) {
+  async fillOutTaskFields() {
     await this.titleInput.fill(constants.newDataForEdit.title)
     await this.contentInput.fill(constants.newDataForEdit.content)
   }
@@ -148,53 +148,84 @@ export default class TasksPage extends Helpers {
   }
 
   async filterByObj(obj, value) {
-    /*const locator = this.page.locator(`[data-source="${obj}"]`)
-    await locator.click();
-    await this.page.waitForSelector(`text="${value}"`)
-    await this.page.click(`text="${value}"`);  
-    await expect(locator).toContainText(value)*/
-
-    const locator = this.page.getByRole('combobox').first()
+    const locator = this.page.locator(`[data-source="${obj}"]`)
     await locator.click()
-    await this.page.waitForSelector(`text="${value}"`)
-    await this.page.getByRole('option', { name: value, exact: true }).click({ force: true });
-    
-    await this.page.getByText('Users').toBeVisible()
-    /*await locator1.locator('input').evaluate(el => {
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    });*/
-    // await expect(locator).toContainText(value)
-    // await this.page.locator('li[data-value="1"]').evaluate(el => el.click())
-    // await expect(locator).toContainText(value)
-    /*selectOption
-    await this.page.waitForSelector(`text="${value}"`);
-    await this.page.click(`text="${value}"`);
-    await this.page.getByText('EDIT').toBeVisible()*/
+    await this.page.waitForSelector('li')
+    await this.page.locator('li').filter({ hasText: value }).evaluate(el => el.click())
+    await expect(locator).toContainText(value)
   }
 
   async removeFilterByObj(obj) {
-    const taskCountBefore = await this.getTaskCount()
-    console.log(taskCountBefore)
-    const locator = this.page.getByRole('combobox').first()
+    const locator = this.page.locator(`[data-source="${obj}"]`)
     await locator.click()
-    await this.page.locator('li[aria-label="Clear value"]').evaluate(el => el.click())
-    const taskCountAfter = await this.getTaskCount()
-    console.log(taskCountAfter)
+    await this.page.locator('li[aria-label="Clear value"]').click()
+    await expect(locator).toContainText('')
   }
 
   async getTaskCount() {
-    const editButtons = await this.editTaskButton.all()
-    return editButtons.length
+    const tasks = await this.page.locator('[data-rfd-drag-handle-draggable-id]').all()
+    return tasks.length
   }
 
   async filterByAssignee() {
-    
     await this.filterByObj('assignee_id' , constants.dataForCreate.assigneeUser)
-    
+  }
+
+  async filterByStatus() {
+    await this.filterByObj('status_id' , constants.dataForCreate.statusForTask)
+  }
+
+  async filterByLabel() {
+    await this.filterByObj('label_id' , constants.dataForCreate.labelForTask1)
   }
 
   async removeFilterByAssignee() {
     await this.removeFilterByObj('assignee_id')
+  }
+
+  async removeFilterByStatus() {
+    await this.removeFilterByObj('status_id')
+  }
+
+  async removeFilterByLabel() {
+    await this.removeFilterByObj('label_id')
+  }
+
+  async checkFilterResult(taskId, startCount) {
+    const taskEditButton = this.page.locator(`[href="#/tasks/${taskId}"]`)
+    await expect(taskEditButton).toBeVisible()
+    await expect.poll(async () => {
+      const items = await this.page.locator('[data-rfd-drag-handle-draggable-id]')
+      return items.count()
+    }).toBeLessThan(startCount)
+  }
+
+  async checkRemoveFilter(taskId, startCount) {
+    const taskEditButton = this.page.locator(`[href="#/tasks/${taskId}"]`)
+    await expect(taskEditButton).toBeVisible()
+    const items = this.page.locator('[data-rfd-drag-handle-draggable-id]')
+    await expect(items).toHaveCount(startCount, { timeout: 5000 })
+  }
+
+  async dragAndDrop(taskId) {
+    const toReviewColumn = this.page.locator('[data-rfd-droppable-id="2"]')
+    const card = this.page.locator(`[data-rfd-drag-handle-draggable-id="${taskId}"]`)
+    const cardBox = await card.boundingBox()
+    const targetBox = await toReviewColumn.boundingBox()
+    const cardX = cardBox.x + cardBox.width / 2
+    const cardY = cardBox.y + cardBox.height / 2
+    await this.page.mouse.move(cardX, cardY)
+    await this.page.mouse.down()
+    const targetX = targetBox.x + targetBox.width / 2
+    const targetY = targetBox.y + targetBox.height / 2
+    await this.page.mouse.move(targetX, targetY, { steps: 10 })
+    await this.page.waitForTimeout(500)
+    await this.page.mouse.up()
+  }
+
+  async checkMoveResult(taskId) {
+    await this.page.locator(`[href="#/tasks/${taskId}"]`).click()
+    await expect(this.statusSelection).toContainText('To Review')
   }
 
 }

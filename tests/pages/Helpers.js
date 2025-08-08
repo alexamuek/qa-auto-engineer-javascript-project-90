@@ -54,7 +54,7 @@ class Helpers {
     await expect(this.messageForDelete).toBeVisible()
   }
 
-  async checkRowsAfterDelete(expectedCount) {
+  async checkRowsAfterDelete() {
     const row = this.page.getByRole('row')
     await expect(row).not.toBeVisible()
   }

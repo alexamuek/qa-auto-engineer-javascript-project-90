@@ -1,8 +1,7 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import StartPage from './pages/StartPage.js'
 import MainPage from './pages/MainPage.js'
 import TasksPage from './pages/TasksPage.js'
-import * as constants from './utils/constants.js'
 
 let startPage
 let mainPage
@@ -22,12 +21,12 @@ test.afterEach(async ({ page }) => {
 })
 
 test.describe('Positive Tests', () => {
-  test('open form for new task', async ({ page }) => {
+  test('open form for new task', async () => {
     await tasksPage.openCreateForm()
     await tasksPage.waitForTaskForm()
   })
 
-  test('create task', async ({ page }) => {
+  test('create task', async () => {
     await tasksPage.openCreateForm()
     await tasksPage.createTask()
     await tasksPage.checkMessageForNewObj()
@@ -35,39 +34,26 @@ test.describe('Positive Tests', () => {
     await tasksPage.checkNewTaskData()
   })
 
-  test('check tasks list', async ({ page }) => {
+  test('check tasks list', async () => {
     await tasksPage.checkTasksList()
   })
 
-  test('edit task', async ({ page }) => {
+  test('edit task', async () => {
     await tasksPage.checkTaskDataBeforeAndOpen()
     await tasksPage.editTask()
     await tasksPage.checkEditedTaskData()
   })
 
-  test('open view of task', async ({ page }) => {
+  test('open view of task', async () => {
     await tasksPage.openViewOfTask()
     await tasksPage.checkTaskInViewMode()
   })
 
-  test('delete task', async ({ page }) => {
+  test('delete task', async () => {
     await tasksPage.openCreateForm()
     await tasksPage.createTask()
     const taskId = await tasksPage.getNewTaskID()
     await tasksPage.goToTaskList()
     await tasksPage.deleteCreatedTask(taskId)
   })
-
-  /*test('filter by assignee', async ({ page }) => {
-    await tasksPage.openNewTaskForm()
-    await tasksPage.createTask()
-    //const taskId = await tasksPage.getNewTaskID()
-    await tasksPage.goToTaskList()
-    await tasksPage.filterByAssignee()
-    // check
-    //await tasksPage.removeFilterByAssignee()
-    //await tasksPage.checkFilterResult()
-  })*/
-
-
 })

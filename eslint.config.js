@@ -22,6 +22,9 @@ export default defineConfig([
         sourceType: 'module',
       },
     },
+    ignores: [
+      'playwright.config.js'
+    ],
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },

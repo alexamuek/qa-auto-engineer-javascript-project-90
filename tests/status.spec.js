@@ -1,8 +1,7 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import StartPage from './pages/StartPage.js'
 import MainPage from './pages/MainPage.js'
 import StatusesPage from './pages/StatusesPage.js'
-import * as constants from './utils/constants.js'
 
 let startPage
 let mainPage
@@ -22,36 +21,36 @@ test.afterEach(async ({ page }) => {
 })
 
 test.describe('Positive Tests', () => {
-  test('open form for new status', async ({ page }) => {
+  test('open form for new status', async () => {
     await statusesPage.openCreateForm()
     await statusesPage.waitForStatusForm()
   })
 
-  test('create status', async ({ page }) => {
+  test('create status', async () => {
     await statusesPage.createStatus()
     await statusesPage.checkMessageForNewObj()
     await statusesPage.checkNewStatusData()
   })
 
-  test('check statuses list', async ({ page }) => {
+  test('check statuses list', async () => {
     await statusesPage.checkStatusesList()
   })
 
-  test('edit status', async ({ page }) => {
+  test('edit status', async () => {
     await statusesPage.checkStatusDataBefore()
     await statusesPage.editStatus()
     await statusesPage.checkMessageForUpdatedObj()
     await statusesPage.checkEditedStatusData()
   })
 
-  test('delete status on list page', async ({ page }) => {
+  test('delete status on list page', async () => {
     await statusesPage.putOnCheckboxForStatus()
     await statusesPage.delete()
     await statusesPage.checkMessageForDeletedObj()
     await statusesPage.checkStatusAfterDelete()
   })
 
-  test('delete ALL statuses in list', async ({ page }) => {
+  test('delete ALL statuses in list', async () => {
     await statusesPage.deleteAllItems()
     await statusesPage.checkStatusesAfterDelete()
   })

@@ -1,8 +1,7 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import StartPage from './pages/StartPage.js'
 import MainPage from './pages/MainPage.js'
 import LabelsPage from './pages/LabelsPage.js'
-import * as constants from './utils/constants.js'
 
 let startPage
 let mainPage
@@ -22,36 +21,36 @@ test.afterEach(async ({ page }) => {
 })
 
 test.describe('Positive Tests', () => {
-  test('open form for new label', async ({ page }) => {
+  test('open form for new label', async () => {
     await labelsPage.openCreateForm()
     await labelsPage.waitForLabelForm()
   })
 
-  test('create label', async ({ page }) => {
+  test('create label', async () => {
     await labelsPage.createLabel()
     await labelsPage.checkMessageForNewObj()
     await labelsPage.checkNewLabelData()
   })
 
-  test('check labels list', async ({ page }) => {
+  test('check labels list', async () => {
     await labelsPage.checkLabelsList()
   })
 
-  test('edit label', async ({ page }) => {
+  test('edit label', async () => {
     await labelsPage.checkLabelDataBefore()
     await labelsPage.editLabel()
     await labelsPage.checkMessageForUpdatedObj()
     await labelsPage.checkEditedLabelData()
   })
 
-  test('delete label on list page', async ({ page }) => {
+  test('delete label on list page', async () => {
     await labelsPage.putOnCheckboxForLabel()
     await labelsPage.delete()
     await labelsPage.checkMessageForDeletedObj()
     await labelsPage.checkLabelAfterDelete()
   })
 
-  test('delete ALL labels in list', async ({ page }) => {
+  test('delete ALL labels in list', async () => {
     await labelsPage.deleteAllItems()
     await labelsPage.checkLabelsAfterDelete()
   })

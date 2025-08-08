@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import StartPage from './pages/StartPage.js'
 import MainPage from './pages/MainPage.js'
 
@@ -14,7 +14,7 @@ test.afterEach(async ({ page }) => {
 })
 
 test.describe('Positive Tests', () => {
-  test('init', async ({ page }) => {
+  test('init', async () => {
     await startPage.waitForStartForm()
   })
 
