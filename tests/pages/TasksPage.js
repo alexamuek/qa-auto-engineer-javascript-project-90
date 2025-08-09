@@ -89,7 +89,7 @@ export default class TasksPage extends Helpers {
 
     const taskButtons = await this.page.getByRole('button').filter({ hasText: 'Index' }).all()
     taskButtons.forEach(async (task) => {
-      const showLink = await task.locator('[aria-label="Show"]')
+      const showLink = await task.locator(`[aria-label="${constants.pagesEl.commonEls.showLabel}"]`)
       await expect(showLink).toBeVisible()
     })
 
@@ -102,7 +102,6 @@ export default class TasksPage extends Helpers {
 
   async checkTaskDataBeforeAndOpen() {
     const editLink = await this.editButton.first()
-    expect(editLink).toBeVisible()
     await editLink.click()
     await expect(this.page.getByText(pageEl.idLabel)).toBeVisible()
   }
@@ -124,7 +123,6 @@ export default class TasksPage extends Helpers {
 
   async openViewOfTask() {
     const showLink = await this.showButton.first()
-    expect(showLink).toBeVisible()
     await showLink.click()
   }
 
