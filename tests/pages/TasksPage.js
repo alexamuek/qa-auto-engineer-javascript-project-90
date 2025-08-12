@@ -143,16 +143,16 @@ export default class TasksPage extends Helpers {
     await expect(this.page.locator(`[href="#/tasks/${taskId}"]`)).not.toBeVisible()
   }
 
-  async filterByObj(obj, value) {
-    const locator = this.page.locator(`[data-source="${obj}"]`)
+  async filterBySelector(selectorId, value) {
+    const locator = this.page.locator(`[data-source="${selectorId}"]`)
     await locator.click()
     await this.page.waitForSelector('li')
     await this.page.locator('li').filter({ hasText: value }).evaluate(el => el.click())
     await expect(locator).toContainText(value)
   }
 
-  async removeFilterByObj(obj) {
-    const locator = this.page.locator(`[data-source="${obj}"]`)
+  async removeFilterForSelector(selectorId) {
+    const locator = this.page.locator(`[data-source="${selectorId}"]`)
     await locator.click()
     await this.page.locator('li[aria-label="Clear value"]').click()
     await expect(locator).toContainText('')
@@ -164,27 +164,27 @@ export default class TasksPage extends Helpers {
   }
 
   async filterByAssignee() {
-    await this.filterByObj('assignee_id' , dataForCreate.assigneeUser)
+    await this.filterBySelector('assignee_id' , dataForCreate.assigneeUser)
   }
 
   async filterByStatus() {
-    await this.filterByObj('status_id' , dataForCreate.statusForTask)
+    await this.filterBySelector('status_id' , dataForCreate.statusForTask)
   }
 
   async filterByLabel() {
-    await this.filterByObj('label_id' , dataForCreate.labelForTask1)
+    await this.filterBySelector('label_id' , dataForCreate.labelForTask1)
   }
 
-  async removeFilterByAssignee() {
-    await this.removeFilterByObj('assignee_id')
+  async removeFilterForAssignee() {
+    await this.removeFilterForSelector('assignee_id')
   }
 
-  async removeFilterByStatus() {
-    await this.removeFilterByObj('status_id')
+  async removeFilterForStatus() {
+    await this.removeFilterForSelector('status_id')
   }
 
-  async removeFilterByLabel() {
-    await this.removeFilterByObj('label_id')
+  async removeFilterForLabel() {
+    await this.removeFilterForSelector('label_id')
   }
 
   async checkFilterResult(taskId, startCount) {

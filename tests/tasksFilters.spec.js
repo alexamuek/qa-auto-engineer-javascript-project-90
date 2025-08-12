@@ -32,7 +32,7 @@ test.describe('Positive Tests', () => {
     test.setTimeout(15000);
     await tasksPage.filterByAssignee()
     await tasksPage.checkFilterResult(taskId, taskCount)
-    await tasksPage.removeFilterByAssignee()
+    await tasksPage.removeFilterForAssignee()
     await tasksPage.checkRemoveFilter(taskId, taskCount)
   })
 
@@ -40,7 +40,7 @@ test.describe('Positive Tests', () => {
     test.setTimeout(15000);
     await tasksPage.filterByStatus()
     await tasksPage.checkFilterResult(taskId, taskCount)
-    await tasksPage.removeFilterByStatus()
+    await tasksPage.removeFilterForStatus()
     await tasksPage.checkRemoveFilter(taskId, taskCount)
   })
 
@@ -48,7 +48,7 @@ test.describe('Positive Tests', () => {
     test.setTimeout(15000);
     await tasksPage.filterByLabel()
     await tasksPage.checkFilterResult(taskId, taskCount)
-    await tasksPage.removeFilterByLabel()
+    await tasksPage.removeFilterForLabel()
     await tasksPage.checkRemoveFilter(taskId, taskCount)
   })
 
