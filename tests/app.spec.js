@@ -7,7 +7,7 @@ let mainPage
 
 test.beforeEach(async ({ page }) => {
   startPage = new StartPage(page)
-  await startPage.goto()
+  await startPage.gotoLoginPage()
 })
 
 test.afterEach(async ({ page }) => {

@@ -15,7 +15,7 @@ export default class StartPage {
     this.signInButton = page.getByRole('button', { name: pageEl.loginButtonLabel })
   }
 
-  async goto() {
+  async gotoLoginPage() {
     await this.page.goto('http://localhost:5173/#/login')
   }
 

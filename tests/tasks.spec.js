@@ -9,7 +9,7 @@ let tasksPage
 
 test.beforeEach(async ({ page }) => {
   startPage = new StartPage(page)
-  await startPage.goto()
+  await startPage.gotoLoginPage()
   await startPage.login()
   mainPage = new MainPage(page)
   await mainPage.openTasksList()
