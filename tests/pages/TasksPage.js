@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test'
 import { tasksPageElements, commonElsElements } from '../utils/constants.js'
-import { dataForCreate, statusesForTaskList, dataForView, statusToEdit, newDataForEdit, statusToDelete } from '../../__fixtures__/data.js'
+import { dataForCreate, statusesForTaskList, newDataForEdit, } from '../../__fixtures__/data.js'
 import { Helpers }  from './Helpers.js'
 
 const pageEl = tasksPageElements
