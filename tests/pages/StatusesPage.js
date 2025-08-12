@@ -1,8 +1,9 @@
 import { expect } from '@playwright/test'
-import * as constants from '../utils/constants.js'
+import { statusesPageElements } from '../utils/constants.js'
+import { dataForCreate, dataForView, statusToEdit, newDataForEdit, statusToDelete } from '../../__fixtures__/data.js'
 import { Helpers }  from './Helpers.js'
 
-const pageEl = constants.pagesEl.statusesPage
+const pageEl = statusesPageElements
 
 export default class StatusesPage extends Helpers {
   /**
@@ -23,8 +24,8 @@ export default class StatusesPage extends Helpers {
   }
 
   async checkNewStatusData() {
-    await expect(this.nameInput).toHaveValue(constants.dataForCreate.statusName)
-    await expect(this.slugInput).toHaveValue(constants.dataForCreate.slug)
+    await expect(this.nameInput).toHaveValue(dataForCreate.statusName)
+    await expect(this.slugInput).toHaveValue(dataForCreate.slug)
   }
 
   async fillOutStatusFields(name, slug) {
@@ -36,8 +37,8 @@ export default class StatusesPage extends Helpers {
     await super.openCreateForm()
     await this.waitForStatusForm()
     await this.fillOutStatusFields(
-      constants.dataForCreate.statusName,
-      constants.dataForCreate.slug
+      dataForCreate.statusName,
+      dataForCreate.slug
     )
     await super.save()
   }
@@ -46,44 +47,44 @@ export default class StatusesPage extends Helpers {
     const expectedCount = 5
     await super.checkRows(expectedCount)
     await super.checkCells()
-    await expect(this.page.getByText(constants.dataForView.statusName, { exact: true })).toBeVisible()
-    await expect(this.page.getByText(constants.dataForView.slug, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(dataForView.statusName, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(dataForView.slug, { exact: true })).toBeVisible()
   }
 
   async checkStatusDataBefore() {
-    await expect(this.page.getByText(constants.statusToEdit, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(statusToEdit, { exact: true })).toBeVisible()
   }
 
   async openStatusInfo(name) {
     const row = await this.page.getByRole('row').filter({ has: this.page.getByText(name) })
     await expect(row).toBeVisible()
     await row.click()
-    await expect(this.page.getByText(`Task status ${constants.statusToEdit}`)).toBeVisible()
+    await expect(this.page.getByText(`Task status ${statusToEdit}`)).toBeVisible()
   }
 
   async editStatus() {
-    await this.openStatusInfo(constants.statusToEdit)
+    await this.openStatusInfo(statusToEdit)
     await this.fillOutStatusFields(
-      constants.newDataForEdit.statusName,
-      constants.newDataForEdit.slug,
+      newDataForEdit.statusName,
+      newDataForEdit.slug,
 
     )
     await super.save()
   }
 
   async checkEditedStatusData() {
-    await expect(this.page.getByText(constants.newDataForEdit.statusName,  { exact: true })).toBeVisible()
-    await expect(this.page.getByText(constants.newDataForEdit.slug,  { exact: true })).toBeVisible()
+    await expect(this.page.getByText(newDataForEdit.statusName,  { exact: true })).toBeVisible()
+    await expect(this.page.getByText(newDataForEdit.slug,  { exact: true })).toBeVisible()
   }
 
   async putOnCheckboxForStatus() {
-    const row = await this.page.getByRole('row').filter({ has: this.page.getByText(constants.statusToDelete, { exact: true }) })
+    const row = await this.page.getByRole('row').filter({ has: this.page.getByText(statusToDelete, { exact: true }) })
     const checkbox = row.getByRole('checkbox')
     await checkbox.click()
   }
 
   async checkStatusAfterDelete() {
-    const el = this.page.getByText(constants.statusToDelete, { exact: true })
+    const el = this.page.getByText(statusToDelete, { exact: true })
     await expect(el).not.toBeVisible()
   }
 

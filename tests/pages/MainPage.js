@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test'
-import * as constants from '../utils/constants.js'
+import { mainPageElements } from '../utils/constants.js'
 
-const pageEl = constants.pagesEl.mainPage
+const pageEl = mainPageElements
 
 export default class MainPage {
   /**

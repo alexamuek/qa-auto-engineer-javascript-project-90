@@ -1,8 +1,9 @@
 import { expect } from '@playwright/test'
-import * as constants from '../utils/constants.js'
+import { usersPageElements } from '../utils/constants.js'
+import { userToEdit, dataForCreate, newDataForEdit, dataForView, userToDelete } from '../../__fixtures__/data.js'
 import { Helpers }  from './Helpers.js'
 
-const pageEl = constants.pagesEl.usersPage
+const pageEl = usersPageElements
 
 export default class UsersPage extends Helpers {
   /**
@@ -20,7 +21,7 @@ export default class UsersPage extends Helpers {
     const row = await this.page.getByRole('row').filter({ has: this.page.getByText(email) })
     await expect(row).toBeVisible()
     await row.click()
-    await expect(this.page.getByText(`User ${constants.userToEdit}`)).toBeVisible()
+    await expect(this.page.getByText(`User ${userToEdit}`)).toBeVisible()
   }
 
   async waitForUserForm() {
@@ -41,47 +42,47 @@ export default class UsersPage extends Helpers {
     await super.openCreateForm()
     await this.waitForUserForm()
     await this.fillOutUserFields(
-      constants.dataForCreate.email,
-      constants.dataForCreate.firstName,
-      constants.dataForCreate.lastName
+      dataForCreate.email,
+      dataForCreate.firstName,
+      dataForCreate.lastName
     )
     await super.save()
   }
 
   async editUser() {
-    await this.openUserProfile(constants.userToEdit)
+    await this.openUserProfile(userToEdit)
     await this.fillOutUserFields(
-      constants.newDataForEdit.email,
-      constants.newDataForEdit.firstName,
-      constants.newDataForEdit.lastName
+      newDataForEdit.email,
+      newDataForEdit.firstName,
+      newDataForEdit.lastName
     )
     await super.save()
   }
 
   async checkNewUserData() {
-    await expect(this.emailInput).toHaveValue(constants.dataForCreate.email)
-    await expect(this.firstNameInput).toHaveValue(constants.dataForCreate.firstName)
-    await expect(this.lastNameInput).toHaveValue(constants.dataForCreate.lastName)
-    await expect(this.page.getByText(`User ${constants.dataForCreate.email}`)).toBeVisible()
+    await expect(this.emailInput).toHaveValue(dataForCreate.email)
+    await expect(this.firstNameInput).toHaveValue(dataForCreate.firstName)
+    await expect(this.lastNameInput).toHaveValue(dataForCreate.lastName)
+    await expect(this.page.getByText(`User ${dataForCreate.email}`)).toBeVisible()
   }
 
   async checkUsersList() {
     const expectedCount = 6
     await super.checkRows(expectedCount)
     await super.checkCells()
-    await expect(this.page.getByText(constants.dataForView.email, { exact: true })).toBeVisible()
-    await expect(this.page.getByText(constants.dataForView.firstName, { exact: true })).toBeVisible()
-    await expect(this.page.getByText(constants.dataForView.lastName, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(dataForView.email, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(dataForView.firstName, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(dataForView.lastName, { exact: true })).toBeVisible()
   }
 
   async checkUserDataBefore() {
-    await expect(this.page.getByText(constants.userToEdit, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(userToEdit, { exact: true })).toBeVisible()
   }
 
   async checkEditedUserData() {
-    await expect(this.page.getByText(constants.newDataForEdit.email)).toBeVisible()
-    await expect(this.page.getByText(constants.newDataForEdit.firstName)).toBeVisible()
-    await expect(this.page.getByText(constants.newDataForEdit.lastName)).toBeVisible()
+    await expect(this.page.getByText(newDataForEdit.email)).toBeVisible()
+    await expect(this.page.getByText(newDataForEdit.firstName)).toBeVisible()
+    await expect(this.page.getByText(newDataForEdit.lastName)).toBeVisible()
   }
 
   async expectErrorMessage() {
@@ -98,13 +99,13 @@ export default class UsersPage extends Helpers {
   }
 
   async putOnCheckboxForUser() {
-    const row = await this.page.getByRole('row').filter({ has: this.page.getByText(constants.userToDelete) })
+    const row = await this.page.getByRole('row').filter({ has: this.page.getByText(userToDelete) })
     const checkbox = row.getByRole('checkbox')
     await checkbox.click()
   }
 
   async checkUserAfterDelete() {
-    const el = this.page.getByText(constants.userToDelete)
+    const el = this.page.getByText(userToDelete)
     await expect(el).not.toBeVisible()
   }
 

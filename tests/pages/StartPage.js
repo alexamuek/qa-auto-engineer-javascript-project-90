@@ -1,7 +1,8 @@
 import { expect } from '@playwright/test'
-import * as constants from '../utils/constants.js'
+import { startPageElements } from '../utils/constants.js'
+import { username, password } from '../../__fixtures__/data.js'
 
-const pageEl = constants.pagesEl.startPage
+const pageEl = startPageElements
 
 export default class StartPage {
   /**
@@ -25,8 +26,8 @@ export default class StartPage {
   }
 
   async login() {
-    await this.inputName.fill(constants.username)
-    await this.inputPassword.fill(constants.password)
+    await this.inputName.fill(username)
+    await this.inputPassword.fill(password)
     await this.signInButton.click()
   }
 }

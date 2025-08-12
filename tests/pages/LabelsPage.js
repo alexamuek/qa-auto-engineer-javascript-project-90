@@ -1,8 +1,9 @@
 import { expect } from '@playwright/test'
-import * as constants from '../utils/constants.js'
+import { labelsPageElements } from '../utils/constants.js'
+import { dataForCreate, dataForView, labelToEdit, newDataForEdit, labelToDelete } from '../../__fixtures__/data.js'
 import { Helpers }  from './Helpers.js'
 
-const pageEl = constants.pagesEl.labelsPage
+const pageEl = labelsPageElements
 
 export default class LabelsPage extends Helpers {
   /**
@@ -22,7 +23,7 @@ export default class LabelsPage extends Helpers {
   }
 
   async checkNewLabelData() {
-    await expect(this.nameInput).toHaveValue(constants.dataForCreate.labelName)
+    await expect(this.nameInput).toHaveValue(dataForCreate.labelName)
   }
 
   async fillOutLabelFields(name) {
@@ -32,7 +33,7 @@ export default class LabelsPage extends Helpers {
   async createLabel() {
     await super.openCreateForm()
     await this.waitForLabelForm()
-    await this.fillOutLabelFields(constants.dataForCreate.labelName)
+    await this.fillOutLabelFields(dataForCreate.labelName)
     await super.save()
   }
 
@@ -40,40 +41,40 @@ export default class LabelsPage extends Helpers {
     const expectedCount = 4
     await super.checkRows(expectedCount)
     await super.checkCells()
-    await expect(this.page.getByText(constants.dataForView.labelName, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(dataForView.labelName, { exact: true })).toBeVisible()
   }
 
   async checkLabelDataBefore() {
-    await expect(this.page.getByText(constants.labelToEdit, { exact: true })).toBeVisible()
+    await expect(this.page.getByText(labelToEdit, { exact: true })).toBeVisible()
   }
 
   async openLabelInfo(name) {
     const row = await this.page.getByRole('row').filter({ has: this.page.getByText(name) })
     await expect(row).toBeVisible()
     await row.click()
-    await expect(this.page.getByText(`Label ${constants.labelToEdit}`)).toBeVisible()
+    await expect(this.page.getByText(`Label ${labelToEdit}`)).toBeVisible()
   }
 
   async editLabel() {
-    await this.openLabelInfo(constants.labelToEdit)
+    await this.openLabelInfo(labelToEdit)
     await this.fillOutLabelFields(
-      constants.newDataForEdit.labelName,
+      newDataForEdit.labelName,
     )
     await super.save()
   }
 
   async checkEditedLabelData() {
-    await expect(this.page.getByText(constants.newDataForEdit.labelName,  { exact: true })).toBeVisible()
+    await expect(this.page.getByText(newDataForEdit.labelName,  { exact: true })).toBeVisible()
   }
 
   async putOnCheckboxForLabel() {
-    const row = await this.page.getByRole('row').filter({ has: this.page.getByText(constants.labelToDelete, { exact: true }) })
+    const row = await this.page.getByRole('row').filter({ has: this.page.getByText(labelToDelete, { exact: true }) })
     const checkbox = row.getByRole('checkbox')
     await checkbox.click()
   }
   
   async checkLabelAfterDelete() {
-    const el = this.page.getByText(constants.labelToDelete, { exact: true })
+    const el = this.page.getByText(labelToDelete, { exact: true })
     await expect(el).not.toBeVisible()
   }
 

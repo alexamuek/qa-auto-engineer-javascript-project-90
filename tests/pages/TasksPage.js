@@ -1,8 +1,9 @@
 import { expect } from '@playwright/test'
-import * as constants from '../utils/constants.js'
+import { tasksPageElements, commonElsElements } from '../utils/constants.js'
+import { dataForCreate, statusesForTaskList, dataForView, statusToEdit, newDataForEdit, statusToDelete } from '../../__fixtures__/data.js'
 import { Helpers }  from './Helpers.js'
 
-const pageEl = constants.pagesEl.tasksPage
+const pageEl = tasksPageElements
 
 export default class TasksPage extends Helpers {
   /**
@@ -33,7 +34,6 @@ export default class TasksPage extends Helpers {
     await expect(this.page.getByText(pageEl.createAtLabel)).toBeVisible()
     const idEl = this.page.getByText(pageEl.idLabel)
     await expect(idEl).toBeVisible()
-    // check id value
     const parent1 = idEl.locator('..')
     const parent2 = parent1.locator('..')
     const childEl = parent2.locator('> *').nth(1)
@@ -51,12 +51,12 @@ export default class TasksPage extends Helpers {
   }
 
   async checkNewTaskData() {
-    await expect(this.assigneeSelection).toContainText(constants.dataForCreate.assigneeUser)
-    await expect(this.titleInput).toHaveValue(constants.dataForCreate.title)
-    await expect(this.contentInput).toHaveValue(constants.dataForCreate.content)
-    await expect(this.statusSelection).toContainText(constants.dataForCreate.statusForTask)
-    await expect(this.labelSelection).toContainText(constants.dataForCreate.labelForTask1)
-    await expect(this.labelSelection).toContainText(constants.dataForCreate.labelForTask2)
+    await expect(this.assigneeSelection).toContainText(dataForCreate.assigneeUser)
+    await expect(this.titleInput).toHaveValue(dataForCreate.title)
+    await expect(this.contentInput).toHaveValue(dataForCreate.content)
+    await expect(this.statusSelection).toContainText(dataForCreate.statusForTask)
+    await expect(this.labelSelection).toContainText(dataForCreate.labelForTask1)
+    await expect(this.labelSelection).toContainText(dataForCreate.labelForTask2)
   }
 
   async chooseItem(el, item) {
@@ -72,27 +72,25 @@ export default class TasksPage extends Helpers {
   }
 
   async createTask() {
-    await this.chooseItem(this.assigneeSelection, constants.dataForCreate.assigneeUser)
-    await this.titleInput.fill(constants.dataForCreate.title)
-    await this.contentInput.fill(constants.dataForCreate.content)
-    await this.chooseItem(this.statusSelection, constants.dataForCreate.statusForTask)
-    await this.chooseMultiItems(this.labelSelection, constants.dataForCreate.labelForTask1, constants.dataForCreate.labelForTask2)
+    await this.chooseItem(this.assigneeSelection, dataForCreate.assigneeUser)
+    await this.titleInput.fill(dataForCreate.title)
+    await this.contentInput.fill(dataForCreate.content)
+    await this.chooseItem(this.statusSelection, dataForCreate.statusForTask)
+    await this.chooseMultiItems(this.labelSelection, dataForCreate.labelForTask1, dataForCreate.labelForTask2)
     await super.save()
   }
 
   async checkTasksList() {
-    const statuses = constants.statusesForTaskList
+    const statuses = statusesForTaskList
     statuses.forEach(async (status) => {
       const header = this.page.getByText(status)
       await expect(header).toBeVisible()
     })
-
     const taskButtons = await this.page.getByRole('button').filter({ hasText: 'Index' }).all()
     taskButtons.forEach(async (task) => {
-      const showLink = await task.locator(`[aria-label="${constants.pagesEl.commonEls.showLabel}"]`)
+      const showLink = await task.locator(`[aria-label="${commonElsElements.showLabel}"]`)
       await expect(showLink).toBeVisible()
     })
-
     const editButtons = await this.editButton.all()
     editButtons.forEach((button) => {
       expect(button).toBeVisible()
@@ -107,8 +105,8 @@ export default class TasksPage extends Helpers {
   }
 
   async fillOutTaskFields() {
-    await this.titleInput.fill(constants.newDataForEdit.title)
-    await this.contentInput.fill(constants.newDataForEdit.content)
+    await this.titleInput.fill(newDataForEdit.title)
+    await this.contentInput.fill(newDataForEdit.content)
   }
 
   async editTask() {
@@ -117,8 +115,8 @@ export default class TasksPage extends Helpers {
   }
 
   async checkEditedTaskData() {
-    await expect(this.page.getByText(constants.newDataForEdit.title,  { exact: true })).toBeVisible()
-    await expect(this.page.getByText(constants.newDataForEdit.content,  { exact: true })).toBeVisible()
+    await expect(this.page.getByText(newDataForEdit.title,  { exact: true })).toBeVisible()
+    await expect(this.page.getByText(newDataForEdit.content,  { exact: true })).toBeVisible()
   }
 
   async openViewOfTask() {
@@ -166,15 +164,15 @@ export default class TasksPage extends Helpers {
   }
 
   async filterByAssignee() {
-    await this.filterByObj('assignee_id' , constants.dataForCreate.assigneeUser)
+    await this.filterByObj('assignee_id' , dataForCreate.assigneeUser)
   }
 
   async filterByStatus() {
-    await this.filterByObj('status_id' , constants.dataForCreate.statusForTask)
+    await this.filterByObj('status_id' , dataForCreate.statusForTask)
   }
 
   async filterByLabel() {
-    await this.filterByObj('label_id' , constants.dataForCreate.labelForTask1)
+    await this.filterByObj('label_id' , dataForCreate.labelForTask1)
   }
 
   async removeFilterByAssignee() {

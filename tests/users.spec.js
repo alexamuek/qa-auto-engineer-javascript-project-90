@@ -2,7 +2,7 @@ import { test } from '@playwright/test'
 import StartPage from './pages/StartPage.js'
 import MainPage from './pages/MainPage.js'
 import UsersPage from './pages/UsersPage.js'
-import * as constants from './utils/constants.js'
+import { userToDelete, userToEdit, wrongEmailToPut1, wrongEmailToPut2, wrongEmailToPut3 } from '../__fixtures__/data.js'
 
 let startPage
 let mainPage
@@ -52,7 +52,7 @@ test.describe('Positive Tests', () => {
   })
 
   test('delete user on profile page', async () => {
-    await usersPage.openUserProfile(constants.userToDelete)
+    await usersPage.openUserProfile(userToDelete)
     await usersPage.delete()
     await usersPage.checkUserAfterDelete()
   })
@@ -65,7 +65,7 @@ test.describe('Positive Tests', () => {
 
 test.describe('Negative Tests', () => {
   test('edit user - put the emptiness', async () => {
-    await usersPage.openUserProfile(constants.userToEdit)
+    await usersPage.openUserProfile(userToEdit)
     await usersPage.fillOutUserFields('','','')
     await usersPage.save()
     await usersPage.expectErrorMessage()
@@ -73,24 +73,24 @@ test.describe('Negative Tests', () => {
   })
 
   test('edit user - put wrong email - without @ ', async () => {
-    await usersPage.openUserProfile(constants.userToEdit)
-    await usersPage.fillOutUserFields(constants.wrongEmailToPut1,'','')
+    await usersPage.openUserProfile(userToEdit)
+    await usersPage.fillOutUserFields(wrongEmailToPut1,'','')
     await usersPage.save()
     await usersPage.expectErrorMessage()
     await usersPage.expectEmailFormatMessage()
   })
 
   test('edit user - put wrong email - without first part ', async () => {
-    await usersPage.openUserProfile(constants.userToEdit)
-    await usersPage.fillOutUserFields(constants.wrongEmailToPut2,'','')
+    await usersPage.openUserProfile(userToEdit)
+    await usersPage.fillOutUserFields(wrongEmailToPut2,'','')
     await usersPage.save()
     await usersPage.expectErrorMessage()
     await usersPage.expectEmailFormatMessage()
   })
 
   test('edit user - put wrong email - without domain ', async () => {
-    await usersPage.openUserProfile(constants.userToEdit)
-    await usersPage.fillOutUserFields(constants.wrongEmailToPut3,'','')
+    await usersPage.openUserProfile(userToEdit)
+    await usersPage.fillOutUserFields(wrongEmailToPut3,'','')
     await usersPage.save()
     await usersPage.expectErrorMessage()
     await usersPage.expectEmailFormatMessage()
