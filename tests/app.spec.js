@@ -3,6 +3,7 @@ import StartPage from './pages/StartPage.js'
 import MainPage from './pages/MainPage.js'
 
 let startPage
+let mainPage
 
 test.beforeEach(async ({ page }) => {
   startPage = new StartPage(page)
@@ -13,23 +14,26 @@ test.afterEach(async ({ page }) => {
   await page.close()
 })
 
-test.describe('Positive Tests', () => {
+test.describe('Positive Tests for Start Page', () => {
   test('init', async () => {
     await startPage.waitForStartForm()
   })
+})
 
-  test('login', async ({ page }) => {
+test.describe('Positive Tests for Main Page', () => {
+  test.beforeEach(async ({ page }) => {
     await startPage.login()
-    const mainPage = new MainPage(page)
-    await mainPage.waitForControls()
+    mainPage = new MainPage(page)
   })
 
-  test('logout', async ({ page }) => {
-    await startPage.login()
-    const mainPage = new MainPage(page)
+  test('login', async () => {
+    await mainPage.waitForPageElements()
+  })
+
+  test('logout', async () => {
     await mainPage.openCurrentUserProfile()
     await mainPage.logout()
-    await mainPage.checkLogoutControl()
+    await mainPage.checkLogoutElement()
     await startPage.waitForStartForm()
   }) 
 })

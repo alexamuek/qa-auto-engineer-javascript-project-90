@@ -19,7 +19,7 @@ export default class MainPage {
     this.tasksMenuItem = page.getByRole('menuitem', { name: pageEl.tasksMenuItemLabel })
   }
 
-  async waitForControls() {
+  async waitForPageElements() {
     await expect(this.themeButton).toBeVisible()
     await expect(this.profileButton).toBeVisible()
     await expect(this.welcomeText).toBeVisible()
@@ -33,7 +33,7 @@ export default class MainPage {
     await this.logoutButton.click()
   }
 
-  async checkLogoutControl() {
+  async checkLogoutElement() {
     await expect(this.logoutButton).toBeHidden()
   }
 
