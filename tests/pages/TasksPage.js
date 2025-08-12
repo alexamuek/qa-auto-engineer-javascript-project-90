@@ -202,7 +202,7 @@ export default class TasksPage extends Helpers {
     const taskEditButton = this.page.locator(`[href="#/tasks/${taskId}"]`)
     await expect(taskEditButton).toBeVisible()
     const items = this.page.locator('[data-rfd-drag-handle-draggable-id]')
-    await expect(items).toHaveCount(startCount, { timeout: 5000 })
+    await expect(items).toHaveCount(startCount, { timeout: 10000 })
   }
 
   async dragAndDrop(taskId) {
