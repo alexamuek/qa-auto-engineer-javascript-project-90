@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test'
 import { tasksPageElements, commonElsElements } from '../utils/constants.js'
-import { dataForCreate, statusesForTaskList, newDataForEdit, } from '../../__fixtures__/data.js'
+import { statusesForTaskList, newDataForEdit, } from '../../__fixtures__/data.js'
 import { Helpers }  from './Helpers.js'
 
 const pageEl = tasksPageElements
@@ -50,13 +50,12 @@ export default class TasksPage extends Helpers {
     return await childEl.textContent()
   }
 
-  async checkNewTaskData() {
-    await expect(this.assigneeSelection).toContainText(dataForCreate.assigneeUser)
-    await expect(this.titleInput).toHaveValue(dataForCreate.title)
-    await expect(this.contentInput).toHaveValue(dataForCreate.content)
-    await expect(this.statusSelection).toContainText(dataForCreate.statusForTask)
-    await expect(this.labelSelection).toContainText(dataForCreate.labelForTask1)
-    await expect(this.labelSelection).toContainText(dataForCreate.labelForTask2)
+  async checkNewTaskData(data) {
+    await expect(this.assigneeSelection).toContainText(data.assigneeUser)
+    await expect(this.titleInput).toHaveValue(data.title)
+    await expect(this.contentInput).toHaveValue(data.content)
+    await expect(this.statusSelection).toContainText(data.statusForTask)
+    await expect(this.labelSelection).toContainText(data.labelForTask)
   }
 
   async chooseItem(el, item) {
@@ -64,19 +63,18 @@ export default class TasksPage extends Helpers {
     await this.page.getByText(item, { exact: true }).click()
   }
 
-  async chooseMultiItems(el, item1, item2) {
+  async chooseMultiItems(el, item) {
     await el.click()
-    await this.page.getByText(item1, { exact: true }).click()
-    await this.page.getByText(item2, { exact: true }).click()
+    await this.page.getByText(item, { exact: true }).click()
     await this.page.keyboard.press('Escape')
   }
 
-  async createTask() {
-    await this.chooseItem(this.assigneeSelection, dataForCreate.assigneeUser)
-    await this.titleInput.fill(dataForCreate.title)
-    await this.contentInput.fill(dataForCreate.content)
-    await this.chooseItem(this.statusSelection, dataForCreate.statusForTask)
-    await this.chooseMultiItems(this.labelSelection, dataForCreate.labelForTask1, dataForCreate.labelForTask2)
+  async createTask(data) {
+    await this.chooseItem(this.assigneeSelection, data.assigneeUser)
+    await this.titleInput.fill(data.title)
+    await this.contentInput.fill(data.content)
+    await this.chooseItem(this.statusSelection, data.statusForTask)
+    await this.chooseMultiItems(this.labelSelection, data.labelForTask)
     await super.save()
   }
 
@@ -163,16 +161,16 @@ export default class TasksPage extends Helpers {
     return tasks.length
   }
 
-  async filterByAssignee() {
-    await this.filterBySelector('assignee_id' , dataForCreate.assigneeUser)
+  async filterByAssignee(assigneeUser) {
+    await this.filterBySelector('assignee_id' , assigneeUser)
   }
 
-  async filterByStatus() {
-    await this.filterBySelector('status_id' , dataForCreate.statusForTask)
+  async filterByStatus(status) {
+    await this.filterBySelector('status_id' ,status)
   }
 
-  async filterByLabel() {
-    await this.filterBySelector('label_id' , dataForCreate.labelForTask1)
+  async filterByLabel(label) {
+    await this.filterBySelector('label_id' , label)
   }
 
   async removeFilterForAssignee() {
@@ -187,13 +185,18 @@ export default class TasksPage extends Helpers {
     await this.removeFilterForSelector('label_id')
   }
 
-  async checkFilterResult(taskId, startCount) {
-    const taskEditButton = this.page.locator(`[href="#/tasks/${taskId}"]`)
-    await expect(taskEditButton).toBeVisible()
+  async isTaskVisible(taskId, startCount) {
     await expect.poll(async () => {
       const items = await this.page.locator('[data-rfd-drag-handle-draggable-id]')
       return items.count()
     }).toBeLessThan(startCount)
+    try {
+      const taskEditButton = this.page.locator(`[href="#/tasks/${taskId}"]`)
+      await expect(taskEditButton).toBeVisible()
+      return true
+    } catch {
+      return false
+    }
   }
 
   async checkRemoveFilter(taskId, startCount) {

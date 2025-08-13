@@ -1,7 +1,8 @@
-import { test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 import StartPage from './pages/StartPage.js'
 import MainPage from './pages/MainPage.js'
 import TasksPage from './pages/TasksPage.js'
+import { dataForCreate, dataForNonSelectedTask } from '../__fixtures__/data.js'
 
 let startPage
 let mainPage
@@ -30,10 +31,10 @@ test.describe('Positive Tests', () => {
 
   test('create task', async () => {
     await tasksPage.openCreateForm()
-    await tasksPage.createTask()
+    await tasksPage.createTask(dataForCreate)
     await tasksPage.checkMessageForNewObj()
     await tasksPage.checkResultForNewTask()
-    await tasksPage.checkNewTaskData()
+    await tasksPage.checkNewTaskData(dataForCreate)
   })
 
   test('check tasks list', async () => {
@@ -53,7 +54,7 @@ test.describe('Positive Tests', () => {
 
   test('delete task', async () => {
     await tasksPage.openCreateForm()
-    await tasksPage.createTask()
+    await tasksPage.createTask(dataForCreate)
     const taskId = await tasksPage.getNewTaskID()
     await tasksPage.goToTaskList()
     await tasksPage.deleteCreatedTask(taskId)
@@ -63,31 +64,34 @@ test.describe('Positive Tests', () => {
 test.describe('Positive Tests for Filters, Drag and Drops', () => {
   test.beforeEach(async () => {
     await tasksPage.openCreateForm()
-    await tasksPage.createTask()
+    await tasksPage.createTask(dataForCreate)
     taskId = await tasksPage.getNewTaskID()
     await tasksPage.goToTaskList()
     taskCount = await tasksPage.getTaskCount()
   })
   test('filter by assignee', async () => {
     test.setTimeout(15000);
-    await tasksPage.filterByAssignee()
-    await tasksPage.checkFilterResult(taskId, taskCount)
+    await tasksPage.filterByAssignee(dataForCreate.assigneeUser)
+    const result = await tasksPage.isTaskVisible(taskId, taskCount)
+    await expect(result).toBe(true)
     await tasksPage.removeFilterForAssignee()
     await tasksPage.checkRemoveFilter(taskId, taskCount)
   })
 
   test('filter by status', async () => {
     test.setTimeout(15000);
-    await tasksPage.filterByStatus()
-    await tasksPage.checkFilterResult(taskId, taskCount)
+    await tasksPage.filterByStatus(dataForCreate.statusForTask)
+    const result = await tasksPage.isTaskVisible(taskId, taskCount)
+    await expect(result).toBe(true)
     await tasksPage.removeFilterForStatus()
     await tasksPage.checkRemoveFilter(taskId, taskCount)
   })
 
   test('filter by label', async () => {
     test.setTimeout(15000);
-    await tasksPage.filterByLabel()
-    await tasksPage.checkFilterResult(taskId, taskCount)
+    await tasksPage.filterByLabel(dataForCreate.labelForTask)
+    const result = await tasksPage.isTaskVisible(taskId, taskCount)
+    await expect(result).toBe(true)
     await tasksPage.removeFilterForLabel()
     await tasksPage.checkRemoveFilter(taskId, taskCount)
   })
@@ -96,5 +100,35 @@ test.describe('Positive Tests for Filters, Drag and Drops', () => {
     test.setTimeout(15000);
     await tasksPage.dragAndDrop(taskId)
     await tasksPage.checkMoveResult(taskId)
+  })
+})
+
+test.describe('Negative Tests for Filters - task is not in filter result', () => {
+  test.beforeEach(async () => {
+    await tasksPage.openCreateForm()
+    await tasksPage.createTask(dataForNonSelectedTask)
+    taskId = await tasksPage.getNewTaskID()
+    await tasksPage.goToTaskList()
+    taskCount = await tasksPage.getTaskCount()
+  })
+  test('filter by assignee', async () => {
+    test.setTimeout(15000);
+    await tasksPage.filterByAssignee(dataForCreate.assigneeUser)
+    const result = await tasksPage.isTaskVisible(taskId, taskCount)
+    await expect(result).toBe(false)
+  })
+
+  test('filter by status', async () => {
+    test.setTimeout(15000);
+    await tasksPage.filterByStatus(dataForCreate.statusForTask)
+    const result = await tasksPage.isTaskVisible(taskId, taskCount)
+    await expect(result).toBe(false)
+  })
+
+  test('filter by label', async () => {
+    test.setTimeout(15000);
+    await tasksPage.filterByLabel(dataForCreate.labelForTask)
+    const result = await tasksPage.isTaskVisible(taskId, taskCount)
+    await expect(result).toBe(false)
   })
 })

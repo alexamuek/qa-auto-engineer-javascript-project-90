@@ -14,8 +14,14 @@ export const dataForCreate = {
   title: 'New bug',
   content: 'Big bug',
   statusForTask: 'Draft',
-  labelForTask1: 'bug',
-  labelForTask2: 'feature',
+  labelForTask: 'bug',
+}
+export const dataForNonSelectedTask = {
+  assigneeUser: 'emily@example.com',
+  title: 'New bug',
+  content: 'Big bug',
+  statusForTask: 'To Be Fixed',
+  labelForTask: 'critical',
 }
 export const dataForView = {
   email: 'john@google.com',
