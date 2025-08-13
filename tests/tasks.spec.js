@@ -6,6 +6,8 @@ import TasksPage from './pages/TasksPage.js'
 let startPage
 let mainPage
 let tasksPage
+let taskId
+let taskCount
 
 test.beforeEach(async ({ page }) => {
   startPage = new StartPage(page)
@@ -55,5 +57,44 @@ test.describe('Positive Tests', () => {
     const taskId = await tasksPage.getNewTaskID()
     await tasksPage.goToTaskList()
     await tasksPage.deleteCreatedTask(taskId)
+  })
+})
+
+test.describe('Positive Tests for Filters, Drag and Drops', () => {
+  test.beforeEach(async () => {
+    await tasksPage.openCreateForm()
+    await tasksPage.createTask()
+    taskId = await tasksPage.getNewTaskID()
+    await tasksPage.goToTaskList()
+    taskCount = await tasksPage.getTaskCount()
+  })
+  test('filter by assignee', async () => {
+    test.setTimeout(15000);
+    await tasksPage.filterByAssignee()
+    await tasksPage.checkFilterResult(taskId, taskCount)
+    await tasksPage.removeFilterForAssignee()
+    await tasksPage.checkRemoveFilter(taskId, taskCount)
+  })
+
+  test('filter by status', async () => {
+    test.setTimeout(15000);
+    await tasksPage.filterByStatus()
+    await tasksPage.checkFilterResult(taskId, taskCount)
+    await tasksPage.removeFilterForStatus()
+    await tasksPage.checkRemoveFilter(taskId, taskCount)
+  })
+
+  test('filter by label', async () => {
+    test.setTimeout(15000);
+    await tasksPage.filterByLabel()
+    await tasksPage.checkFilterResult(taskId, taskCount)
+    await tasksPage.removeFilterForLabel()
+    await tasksPage.checkRemoveFilter(taskId, taskCount)
+  })
+
+  test('drag and drop', async () => {
+    test.setTimeout(15000);
+    await tasksPage.dragAndDrop(taskId)
+    await tasksPage.checkMoveResult(taskId)
   })
 })
